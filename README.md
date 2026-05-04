@@ -1,6 +1,6 @@
 # ai-memory-discovery-gate
 
-[![Gate](https://img.shields.io/badge/v0.6.4_gate-pending_first_run-yellow)]()
+[![Gate](https://img.shields.io/badge/v0.6.4_gate-harness--pipeline_green-brightgreen)]()
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![DB](https://img.shields.io/badge/DB_baseline-v0.6.3.1_(schema_v19)-6ee7ff)]()
 

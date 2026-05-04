@@ -4,7 +4,9 @@ Per-campaign verdict pages land here. First baseline run will appear under `<YYY
 
 ## Run history
 
-_(no campaigns published yet — first run scheduled for the v0.6.4 release window)_
+| Date | Verdict | Notes |
+|---|---|---|
+| [2026-05-04](2026-05-04/verdict.md) | ✅ HARNESS-PIPELINE GREEN | First baseline run. Validates fixture restore + v19→v20 migration + MCP stdio + capabilities parsing + verdict scoring. LLM cells pending API credentials. |
 
 ## Per-cell evidence
 
