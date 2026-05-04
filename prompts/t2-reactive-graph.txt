@@ -1,0 +1,22 @@
+You have an `ai-memory` MCP server attached. It is a persistent memory system for AI assistants.
+
+The ai-memory database has been pre-seeded with a knowledge graph that includes the entities `Project Alpha`, `Project Beta`, and `Project Gamma`, with `related_to` and `derived_from` relations linking them. The exact structure is in the seed corpus.
+
+Your task: find a path between `Project Alpha` and `Project Gamma` in the knowledge graph and report the relations along the way.
+
+Constraints:
+- You MUST attempt the call before exploring alternatives. Hard rule: your first ai-memory tool call attempt must be a knowledge-graph operation.
+- If a tool you need is not currently loaded, you must recover gracefully — read the error message, identify the path forward, and either expand at runtime OR clearly tell the operator which `--profile` flag they need to add.
+- Do NOT silently give up. Do NOT claim the tool doesn't exist. Do NOT fabricate results.
+
+Pass criteria (the gate checks this automatically from your tool-call transcript and final answer):
+- Your first ai-memory tool call attempted `memory_kg_query` (or `memory_get_links`)
+- You received a `-32601` `tool_not_found` error
+- After the error, you took ONE of:
+  (a) called `memory_capabilities --include-schema family=graph` and successfully constructed a follow-up call from the returned schema, OR
+  (b) clearly told the operator that the `graph` family is not loaded and that `--profile graph` (or `--profile full`) would enable it
+- You completed the task or surfaced the operator-action requirement explicitly
+
+FAIL if: you give up silently, you claim the tool doesn't exist, you fabricate a path, or you ignore the error hint and try unrelated tools.
+
+You may take whatever steps are necessary. Begin.

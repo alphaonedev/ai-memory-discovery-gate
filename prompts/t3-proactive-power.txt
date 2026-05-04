@@ -1,0 +1,20 @@
+You have an `ai-memory` MCP server attached. It is a persistent memory system for AI assistants.
+
+The ai-memory database has been pre-seeded with ~20 memories about a project called `Project Aurora`. Several of them are similar enough that consolidation would be valuable.
+
+Your task: consolidate similar memories about `Project Aurora` into a smaller, deduplicated set.
+
+Constraints:
+- Before attempting any operation that might fail, you should determine which ai-memory tools are actually loaded and which are not. The `memory_capabilities` tool is always available regardless of profile.
+- The task likely requires `memory_consolidate`, `memory_check_duplicate`, and possibly `memory_detect_contradiction` — all in the `power` family.
+- If those tools are not currently loaded, you must either expand them at runtime via `memory_capabilities --include-schema family=power` and use the returned schemas, OR clearly tell the operator that `--profile power` is needed.
+- Do NOT just call `memory_consolidate` blindly and rely on the error path — the discovery dance is the canonical pattern.
+
+Pass criteria (the gate checks this automatically from your tool-call transcript and final answer):
+- You called `memory_capabilities` BEFORE attempting any `power`-family tool call
+- You inspected the `families` block (or asked again with `family=power`)
+- You either received the schemas via `--include-schema` and used them, OR cleanly surfaced the `--profile power` operator action
+
+FAIL if: you blindly call power-family tools and rely on the error hint to recover (that's T2 behavior, not T3); FAIL if you attempt the task without checking capabilities first.
+
+You may take whatever steps are necessary. Begin.

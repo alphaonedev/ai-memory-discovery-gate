@@ -1,0 +1,52 @@
+site_name: ai-memory NHI Discovery Gate
+site_description: Empirical ship-gate proving real AI agents can discover ai-memory tools outside the v0.6.4 5-tool default surface.
+site_url: https://alphaonedev.github.io/ai-memory-discovery-gate/
+repo_url: https://github.com/alphaonedev/ai-memory-discovery-gate
+repo_name: alphaonedev/ai-memory-discovery-gate
+docs_dir: docs
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes
+    - content.code.copy
+    - search.suggest
+    - search.highlight
+  palette:
+    - scheme: slate
+      primary: deep purple
+      accent: cyan
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+    - scheme: default
+      primary: deep purple
+      accent: cyan
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+
+nav:
+  - Home: index.md
+  - Methodology: methodology.md
+  - Tiers:
+    - T1 — Awareness: tiers/t1-awareness.md
+    - T2 — Reactive recovery: tiers/t2-reactive.md
+    - T3 — Proactive expansion: tiers/t3-proactive.md
+    - T4 — Mesh recovery: tiers/t4-mesh.md
+  - Runs:
+    - Index: runs/index.md
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true

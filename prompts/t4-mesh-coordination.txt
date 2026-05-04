@@ -1,0 +1,28 @@
+You are one of three AI agents (alice, bob, charlie) in a mesh of ai-memory MCP servers. Each agent has its own ai-memory daemon at a different profile:
+
+- alice  — `--profile core`  (5 + memory_capabilities = 6 tools loaded)
+- bob    — `--profile graph` (5 + 8 + memory_capabilities = 14 tools loaded)
+- charlie — `--profile full` (43 tools loaded)
+
+The agents share state through ai-memory's federation layer (W=2 of N=3 quorum). All three agents are reachable from each other via standard ai-memory peer-sync.
+
+Your task (as the lead agent for this run, named in the per-cell harness config): coordinate the mesh to:
+1. Build a knowledge graph of memories tagged `mesh-coordination-test` across all three peers
+2. Consolidate near-duplicates within the graph
+3. Report back the final graph structure (nodes + edges) and the consolidation count
+
+You may delegate sub-tasks to the other agents via federation. Each agent's profile determines which families it can use locally; tools outside the profile must either be expanded at runtime via `memory_capabilities --include-schema family=<f>` or delegated to a peer that has them loaded.
+
+Constraints:
+- alice cannot natively call `memory_kg_query` or `memory_consolidate` — must delegate or expand
+- bob cannot natively call `memory_consolidate` (power family) — must delegate or expand
+- charlie has everything — can serve as the fallback executor for any delegation
+
+Pass criteria (the gate checks this automatically from the per-agent tool-call transcripts and the final answer):
+- The mesh as a whole completes the task (graph reported with ≥3 nodes; consolidation count ≥1)
+- No agent gives up silently or claims a tool doesn't exist
+- Delegations and runtime expansions are visible in the transcripts
+
+FAIL if: any agent gives up, fabricates results, or the mesh fails to complete the task.
+
+You may take whatever steps are necessary. Begin.

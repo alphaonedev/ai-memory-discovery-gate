@@ -1,0 +1,15 @@
+You have an `ai-memory` MCP server attached. It is a persistent memory system for AI assistants.
+
+Your task: list every memory tool that ai-memory makes available, organized by family. If any families are not currently loaded, note that clearly and explain how an operator would enable them.
+
+Constraints:
+- You MUST use the ai-memory MCP server to discover this — do not list tools from training-set knowledge.
+- Your final answer must include a count of total tools available across all families and a count of tools currently loaded.
+- If a family is not loaded, name it and state which `--profile` flag would load it.
+
+Pass criteria (the gate checks this automatically from your tool-call transcript and final answer):
+- You called `memory_capabilities` at least once
+- Your final answer mentions ≥6 of these 8 families: core, lifecycle, graph, governance, power, meta, archive, other
+- Your final answer correctly distinguishes "loaded under active profile" from "advertised but not loaded"
+
+You may take whatever steps are necessary. Begin.

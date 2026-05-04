@@ -1,0 +1,28 @@
+[package]
+name = "discovery-gate"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"
+authors = ["AlphaOne LLC"]
+description = "Runner crate for ai-memory NHI Discovery Gate. Drives one (tier, llm, harness, profile) cell against a v0.6.4-rc binary using a v0.6.3.1 DB baseline."
+license = "Apache-2.0"
+repository = "https://github.com/alphaonedev/ai-memory-discovery-gate"
+publish = false
+
+[[bin]]
+name = "discovery-gate"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = "1"
+chrono = { version = "0.4", features = ["clock", "serde"] }
+clap = { version = "4", features = ["derive", "env"] }
+flate2 = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+tempfile = "3"
+tokio = { version = "1", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"] }
+uuid = { version = "1", features = ["v4"] }
