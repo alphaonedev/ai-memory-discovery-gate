@@ -1,0 +1,21 @@
+# Rust
+runner/target/
+**/*.rs.bk
+*.pdb
+
+# Site build
+_site/
+site/
+
+# Local env
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+.vscode/
+*.swp
