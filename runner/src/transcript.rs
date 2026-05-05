@@ -61,15 +61,24 @@ pub struct Captured {
 /// Drive a single (tier, llm, harness, profile) cell. Returns the
 /// captured transcript shape that `verdict::evaluate` consumes.
 ///
-/// **Status:** v0.6.4 ships this as a stub that delegates to the
-/// docker shell runner — full implementation lands in v0.6.4-018a
-/// follow-up. The skeleton lets the tier/verdict modules compile and
-/// be unit-tested in isolation.
+/// **Status:** v0.6.4 ships the canonical real-LLM driver as
+/// `scripts/grok_cell.py` (Python, stdlib-only, mirrors the v0.6.3.1
+/// A2A campaign harness conventions). That script is the certifying
+/// path — `scripts/run-llm-cells.sh` invokes it for all four tiers
+/// and writes the per-cell verdict JSON + markdown directly.
+///
+/// This Rust function remains a stub for the corpus-restore + verdict-
+/// scoring unit tests. To use the Rust runner end-to-end against a real
+/// LLM, invoke `scripts/grok_cell.py` from here as a subprocess and
+/// parse the resulting verdict JSON — adding that thin wrapper is a
+/// non-blocking v0.6.5 polish item; the gate's certifying invocation
+/// is via the shell launcher.
 pub fn run_cell(cell: &Cell) -> Result<Captured> {
     tracing::warn!(
-        "transcript::run_cell — v0.6.4 stub. Real harness invocation arrives in v0.6.4-018a; \
-         this run records a placeholder Captured so the verdict pipeline can be tested. \
-         Cell={cell:?}"
+        "transcript::run_cell — Rust stub. Canonical real-LLM driver is \
+         scripts/grok_cell.py (Python). Rust wrapper is a v0.6.5 polish \
+         item. This run records a placeholder Captured so the verdict \
+         pipeline can be tested. Cell={cell:?}"
     );
 
     // Compute the binary's content hash for verdict reproducibility.

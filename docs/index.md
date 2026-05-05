@@ -27,12 +27,14 @@ This is **not** an exhaustive multi-LLM × multi-harness epic. It's a focused ga
 
 | Tier | Pass bar | Outcome |
 |---|---|:---:|
-| [T1 — Awareness](tiers/t1-awareness.md) | ≥90% | _pending_ |
-| [T2 — Reactive recovery](tiers/t2-reactive.md) | ≥80% | _pending_ |
-| [T3 — Proactive expansion](tiers/t3-proactive.md) | ≥50% | _pending_ |
-| [T4 — Mesh recovery](tiers/t4-mesh.md) | ≥66% | _pending_ |
+| [T1 — Awareness](tiers/t1-awareness.md) | ≥90% | _pending real Grok run_ |
+| [T2 — Reactive recovery](tiers/t2-reactive.md) | ≥80% | _pending real Grok run_ |
+| [T3 — Proactive expansion](tiers/t3-proactive.md) | ≥50% | _pending real Grok run_ |
+| [T4 — Mesh recovery](tiers/t4-mesh.md) | ≥66% | _pending real Grok run_ |
 
 Click any cell after the first run for the per-test transcript.
+
+**LLM driver landed.** As of the [2026-05-05 run](runs/2026-05-05/verdict.md) the gate's xAI Grok 4.3 driver (`scripts/grok_cell.py`) is wired end-to-end and validated against the real v0.6.4 binary via a mock-LLM harness covering all four tier scoring paths. The certifying real-Grok run fires automatically once an operator with `XAI_API_KEY` runs `bash scripts/run-llm-cells.sh` — no further infrastructure work needed.
 
 ## DB baseline
 

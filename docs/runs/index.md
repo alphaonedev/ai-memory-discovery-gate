@@ -6,7 +6,7 @@ Per-campaign verdict pages land here. First baseline run will appear under `<YYY
 
 | Date | Verdict | Notes |
 |---|---|---|
-| [2026-05-05](2026-05-05/verdict.md) | ✅ HARNESS-PIPELINE GREEN | Scope narrowed to **OpenClaw × xAI Grok 4.3** per v0.6.4 product directive. Pipeline confirmed end-to-end. Real LLM cell pending xAI API key. |
+| [2026-05-05](2026-05-05/verdict.md) | GATE YELLOW (driver wired, awaiting key) | LLM driver `scripts/grok_cell.py` landed and validated end-to-end via mock-LLM harness. All four tier scoring paths verified against the real v0.6.4 binary. Certifying real-Grok run fires the moment `XAI_API_KEY` reaches operator env. |
 | [2026-05-04](2026-05-04/verdict.md) | ✅ HARNESS-PIPELINE GREEN | First baseline (broader scope before narrowing). Validates fixture restore + v19→v20 migration + MCP stdio + capabilities parsing. |
 
 ## Per-cell evidence

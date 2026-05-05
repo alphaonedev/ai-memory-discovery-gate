@@ -33,12 +33,14 @@ This is **not** a "massive epic of testing" — it's a focused gate that answers
 
 | Tier | Pass bar | Outcome |
 |---|---|---|
-| T1 — Awareness | ≥90% calls succeed | _pending_ |
-| T2 — Reactive recovery | ≥80% recover | _pending_ |
-| T3 — Proactive expansion | ≥50% pre-check | _pending_ |
-| T4 — Mesh recovery | ≥66% mesh complete | _pending_ |
+| T1 — Awareness | ≥90% calls succeed | _pending real Grok run_ |
+| T2 — Reactive recovery | ≥80% recover | _pending real Grok run_ |
+| T3 — Proactive expansion | ≥50% pre-check | _pending real Grok run_ |
+| T4 — Mesh recovery | ≥66% mesh complete | _pending real Grok run_ |
 
 A run is **GATE GREEN** when all four pass bars are met. Click any cell after the first run for the per-test transcript.
+
+**LLM driver is wired and validated end-to-end** as of the [2026-05-05 run](docs/runs/2026-05-05/verdict.md) — `scripts/grok_cell.py` drives Grok 4.3 against the real v0.6.4 binary, mock-LLM scenarios exercise all four tier scoring paths cleanly. To fire the certifying real-Grok run, an operator with an `XAI_API_KEY` runs the [one-liner below](#how-to-run).
 
 ## DB baseline
 
@@ -54,31 +56,59 @@ Fixture: `fixtures/corpus/v0.6.3.1-baseline.db.gz` (7,601 bytes).
 
 ## How to run
 
-The runner is Docker-based (per user directive — reuses the OpenClaw harness from `alphaonedev/ai-memory-a2a-v0.6.3.1` that delivered 9/9 substrate streaks).
+### Real Grok 4.3 campaign (the certifying path)
 
 ```bash
-# 1. Build the OpenClaw image with v0.6.4 binary baked in
-docker buildx build -f docker/Dockerfile.base -t ai-memory-base:v0.6.4 .
-docker buildx build -f docker/Dockerfile.openclaw -t openclaw-discovery:v0.6.4 docker/
+# 1. Make sure XAI_API_KEY is in your shell env. The script does NOT read
+#    credential files directly; it relies on the process environment so
+#    secrets never enter container layers / transcripts (matches the
+#    v0.6.3.1 A2A campaign convention).
+export XAI_API_KEY=xai-...   # or `set -a; . /path/to/.env; set +a`
 
-# 2. Drop your xAI API key into .env
-echo "XAI_API_KEY=xai-..." > .env
-
-# 3. Run the gate
-./runner/target/release/discovery-gate run \
-  --binary ../ai-memory-mcp/target/release/ai-memory \
-  --tier all \
-  --llm grok-4.3 \
-  --harness openclaw \
-  --output docs/runs/$(date +%Y-%m-%d)
+# 2. Fire all four tiers + aggregate + update site:
+DISCOVERY_GATE_BINARY=../ai-memory-mcp/target/release/ai-memory \
+    bash scripts/run-llm-cells.sh
 ```
 
-Or for the no-LLM-credentials harness-pipeline smoke test:
+This restores the v0.6.3.1 baseline DB per cell, spawns the v0.6.4 binary
+in MCP stdio mode at the right profile per tier, drives Grok 4.3 in a
+tool-calling loop against the real MCP, captures per-cell wire log +
+transcript, scores against pass criteria, and rewrites `docs/index.md` +
+`README.md` badge based on the aggregate. Total wall clock: ~3–6 min.
+
+### Per-tier debug
+
+```bash
+# One tier at a time, with full transcript:
+python3 scripts/grok_cell.py \
+    --tier t2 --profile core \
+    --binary ../ai-memory-mcp/target/release/ai-memory \
+    --out-dir docs/runs/$(date -u +%Y-%m-%d)
+```
+
+### No-credentials harness-pipeline smoke (no LLM)
 
 ```bash
 DISCOVERY_GATE_BINARY=../ai-memory-mcp/target/release/ai-memory \
     bash scripts/smoke-t1-local.sh
 ```
+
+Validates the non-LLM portion of the pipeline (DB restore, daemon spawn,
+MCP wire-log capture, capabilities parsing, verdict scoring). Cannot
+turn the gate green by itself — the gate badge is gated on real Grok
+cells per the methodology.
+
+### Pipeline self-test (no real LLM, no API key)
+
+```bash
+DISCOVERY_GATE_BINARY=../ai-memory-mcp/target/release/ai-memory \
+    python3 scripts/test_grok_cell_mock.py
+```
+
+Runs all four tier scoring paths against the real v0.6.4 binary with
+mocked LLM responses — verifies the MCP loop, tool dispatch, families
+parsing, error-code capture, include_schema detection, and per-tier
+scoring all behave correctly before spending Grok tokens.
 
 ## Repo layout
 
