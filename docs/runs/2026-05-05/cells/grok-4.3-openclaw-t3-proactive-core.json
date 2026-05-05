@@ -1,0 +1,62 @@
+{
+  "schema_version": "v0.6.4-discovery-gate-1",
+  "tier": "t3-proactive",
+  "llm": "grok-4.3",
+  "llm_model": "grok-4-0709",
+  "harness": "openclaw",
+  "profile": {
+    "raw": "core"
+  },
+  "outcome": "pass",
+  "evidence": {
+    "agent_called_capabilities": true,
+    "agent_received_tool_not_found": false,
+    "agent_called_include_schema": true,
+    "agent_completed_task": true,
+    "agent_called_capabilities_before_power": true,
+    "families_surfaced": [
+      "core",
+      "lifecycle",
+      "graph",
+      "governance",
+      "power",
+      "meta",
+      "archive",
+      "other"
+    ],
+    "loaded_flags": {
+      "core": true,
+      "lifecycle": false,
+      "graph": false,
+      "governance": false,
+      "power": false,
+      "meta": false,
+      "archive": false,
+      "other": false
+    },
+    "tool_calls": [
+      "memory_capabilities",
+      "memory_capabilities",
+      "memory_search",
+      "memory_recall",
+      "memory_capabilities",
+      "memory_capabilities",
+      "memory_recall",
+      "memory_recall",
+      "memory_capabilities",
+      "memory_recall"
+    ],
+    "error_codes": [],
+    "rounds": 11,
+    "wall_clock_ms": 234753,
+    "tokens_in": 128410,
+    "tokens_out": 634,
+    "grok_finish_reason": "stop",
+    "final_answer_excerpt": "To complete the consolidation of similar memories about Project Aurora, the power family tools are required but not currently loaded. Operator, please restart the MCP server with `--profile power` added to the command line to load them.\n\nI discovered 5 near-duplicate memories (IDs: 551a578b-7cd5-4bc8-bf77-e4a5504f990c, d9a9803f-b613-4924-b23d-7b174410dcae, 6a9254a3-3105-4cf6-a33a-f8fe8fba35c7, 2b822e56-3c42-4b0c-9d7b-d61313075657, 713e00fb-33ad-4339-95ec-c9a51be3bbcb) tagged as consolidation candidates, all describing Project Aurora as a test for T3 consolidation involving v0.6.4 quiet-tools. Once the profile is loaded, I can call memory_consolidate on these IDs to merge them into a single summary memory."
+  },
+  "timestamp_utc": "2026-05-05T01:41:32.178165Z",
+  "binary_sha256": "f5abad816bc34c11dfbadf17402ef6c6f08edecb93ae1985de7e9173415be09a",
+  "transcript_url": "runs/2026-05-05/cells/grok-4.3-openclaw-t3-proactive-core.transcript.jsonl",
+  "mcp_wire_log_sha256": "d97a78eed9619fd6685b33df7ba7113938e0321c7d27c1ef83135ac3c4ee03c4",
+  "verdict_reason": "agent pre-checked capabilities and surfaced expansion or operator action"
+}

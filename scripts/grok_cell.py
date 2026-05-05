@@ -58,7 +58,8 @@ XAI_ENDPOINT = "https://api.x.ai/v1/chat/completions"
 DEFAULT_BINARY = str((REPO_ROOT.parent / "ai-memory-mcp" / "target" / "release" / "ai-memory").resolve())
 DEFAULT_MODEL = os.environ.get("GROK_MODEL", "grok-4-0709")
 MAX_TOOL_ROUNDS = int(os.environ.get("MAX_TOOL_ROUNDS", "12"))
-HTTP_TIMEOUT_S = int(os.environ.get("GROK_TIMEOUT_S", "90"))
+HTTP_TIMEOUT_S = int(os.environ.get("GROK_TIMEOUT_S", "300"))
+HTTP_RETRIES = int(os.environ.get("GROK_RETRIES", "2"))
 
 
 def fatal(msg: str, code: int = 2) -> None:
@@ -249,16 +250,30 @@ def grok_chat(messages: list[dict], tools: list[dict], api_key: str, model: str)
         },
         method="POST",
     )
-    try:
-        with urllib.request.urlopen(req, timeout=HTTP_TIMEOUT_S) as resp:
-            return json.loads(resp.read().decode("utf-8"))
-    except urllib.error.HTTPError as e:
-        body_txt = ""
+    last_err = None
+    for attempt in range(HTTP_RETRIES + 1):
         try:
-            body_txt = e.read().decode("utf-8")[:500]
-        except Exception:
-            pass
-        raise RuntimeError(f"xAI HTTP {e.code}: {body_txt}") from e
+            with urllib.request.urlopen(req, timeout=HTTP_TIMEOUT_S) as resp:
+                return json.loads(resp.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            body_txt = ""
+            try:
+                body_txt = e.read().decode("utf-8")[:500]
+            except Exception:
+                pass
+            # 5xx is retryable; 4xx is not.
+            if 500 <= e.code < 600 and attempt < HTTP_RETRIES:
+                last_err = RuntimeError(f"xAI HTTP {e.code}: {body_txt}")
+                time.sleep(2 ** attempt)
+                continue
+            raise RuntimeError(f"xAI HTTP {e.code}: {body_txt}") from e
+        except (urllib.error.URLError, TimeoutError) as e:
+            last_err = e
+            if attempt < HTTP_RETRIES:
+                time.sleep(2 ** attempt)
+                continue
+            raise RuntimeError(f"xAI transport error after {HTTP_RETRIES + 1} attempts: {e}") from e
+    raise RuntimeError(f"xAI all retries exhausted: {last_err}")
 
 
 def mcp_tools_to_openai(mcp_tools: list[dict]) -> list[dict]:
@@ -398,15 +413,39 @@ def run_grok_loop(
     # any include_schema call so newly-exposed names are tool-callable.
     tools_openai = mcp_tools_to_openai(initial_tools_mcp)
 
+    # Discovery-aware system prompt — mirrors the v0.6.4 ship-recommended
+    # snippet at docs/integrations/v0.6.4-system-prompt-snippet.md in
+    # ai-memory-mcp. This is what an operator would inject into Grok's
+    # system prompt in production. Without it, Grok lacks the convention
+    # that the discovery dance is the canonical pattern for missing
+    # tools — the gate's purpose is to test the v0.6.4 design as
+    # operationally deployed, not the bare-API behavior of an unprimed
+    # model.
     system_msg = {
         "role": "system",
         "content": (
-            "You are an OpenClaw-hosted AI assistant with a single MCP server attached: ai-memory. "
-            "Use the provided MCP tools to accomplish the user's task. "
-            "When a tool call returns an error code -32601 ('tool not found'), DO NOT give up — "
-            "the error message describes how to recover (call memory_capabilities --include-schema "
-            "family=<name>, OR tell the operator to add --profile <name>). "
-            "ALWAYS provide a concrete final answer that names what you did and what you discovered."
+            "You are an OpenClaw-hosted AI assistant with a single MCP server attached: ai-memory.\n"
+            "It exposes a persistent memory system with tools organized into 8 families "
+            "(core, lifecycle, graph, governance, power, meta, archive, other).\n\n"
+            "By default, only 5 core tools are advertised: memory_store, memory_recall, "
+            "memory_list, memory_get, memory_search.\n\n"
+            "If you need a tool that is not in your tool list, follow the discovery dance:\n\n"
+            "1. Call `memory_capabilities` (always available) to see which families are "
+            "loaded and which are not. The response includes a `families` block listing "
+            "all 8 families with their tool names and a `loaded` flag.\n\n"
+            "2. If the tool you need lives in a not-loaded family, call `memory_capabilities` "
+            "again with `family=<name>` and `include_schema=true` to retrieve the full "
+            "schemas, then construct tool calls against those schemas, OR tell the operator "
+            "to restart with `--profile <name>` (or `--profile full` for the v0.6.3 "
+            "surface 1:1).\n\n"
+            "3. If you call a tool that is not loaded, the server returns a -32601 error "
+            "with an actionable hint naming the family and suggesting both `--profile` and "
+            "`--include-schema` paths. Read the hint and recover — do not silently give up.\n\n"
+            "The discovery dance is the canonical pattern. `memory_capabilities` is always "
+            "loaded regardless of profile, so step 1 always works.\n\n"
+            "ALWAYS provide a concrete final answer that names what you did and what you "
+            "discovered. Do not loop — if a tool returns an error or 'not found', step back "
+            "and call `memory_capabilities` to understand the surface before retrying."
         ),
     }
     user_msg = {"role": "user", "content": prompt}

@@ -1,0 +1,56 @@
+{
+  "schema_version": "v0.6.4-discovery-gate-1",
+  "tier": "t4-mesh-recovery",
+  "llm": "grok-4.3",
+  "llm_model": "grok-4-0709",
+  "harness": "openclaw",
+  "profile": {
+    "raw": "core"
+  },
+  "outcome": "pass",
+  "evidence": {
+    "agent_called_capabilities": true,
+    "agent_received_tool_not_found": false,
+    "agent_called_include_schema": true,
+    "agent_completed_task": true,
+    "agent_called_capabilities_before_power": true,
+    "families_surfaced": [
+      "core",
+      "lifecycle",
+      "graph",
+      "governance",
+      "power",
+      "meta",
+      "archive",
+      "other"
+    ],
+    "loaded_flags": {
+      "core": true,
+      "lifecycle": false,
+      "graph": false,
+      "governance": false,
+      "power": false,
+      "meta": false,
+      "archive": false,
+      "other": false
+    },
+    "tool_calls": [
+      "memory_capabilities",
+      "memory_list",
+      "memory_capabilities"
+    ],
+    "error_codes": [],
+    "rounds": 3,
+    "wall_clock_ms": 90047,
+    "tokens_in": 18366,
+    "tokens_out": 751,
+    "grok_finish_reason": "stop",
+    "final_answer_excerpt": "### Final Report on Mesh-Coordination Memories and Knowledge-Graph Operations\n\n**Mesh-Coordination Memories Found:**\nI used `memory_list` to retrieve memories in the `discovery-gate` namespace (all appear to be in the 'mid' tier). This returned 17 memories total, of which 9 are explicitly tagged with `mesh-coordination-test` (as pre-seeded in the database). These are the mesh-coordination memories that exist:\n\n- Mesh test memory 1 (ID: a7fae270-9c77-4563-a28a-4e7f4f3460b5)\n- Mesh test memory 2 (ID: 9797b240-a163-47e3-86cb-1b1845928a07)\n- Mesh test memory 3 (ID: caf64ae3-c7ee-48ea-b0fc-029132a32573)\n- Mesh test memory 4 (ID: 2cf9419b-1721-4449-8c34-8628b20b2975)\n- Mesh test memory 5 (ID: d8b80474-f337-407a-a511-af0f41ea3343)\n- Mesh test memory 6 (ID: bfbbfacf-c03e-48b7-ba63-8817d7bf1e59)\n- Mesh test memory 7 (ID: 5814e146-71a4-4b15-9b67-6b23cbfe7fb6)\n- Mesh test memory 8 (ID: 5223375e-60fc-4a04-9c43-d195cbeab57e)\n- Mesh test memory 9 (ID: 6f701f40-02a8-4b21-b5cb-a1cbe8217e4f)\n\n**Count o"
+  },
+  "timestamp_utc": "2026-05-05T02:15:03.362345Z",
+  "binary_sha256": "f5abad816bc34c11dfbadf17402ef6c6f08edecb93ae1985de7e9173415be09a",
+  "transcript_url": "runs/2026-05-05/cells/grok-4.3-openclaw-t4-mesh-recovery-alice-core.transcript.jsonl",
+  "mcp_wire_log_sha256": "06379daec9f22d26ce41a31f64977c8a1e36437c6aab27be80ef06d45f22ef9f",
+  "verdict_reason": "mesh completed coordination across simulated peers",
+  "note": "T4 sub-cell \u2014 agent=alice profile=core (single-process mesh simulation)"
+}

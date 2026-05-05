@@ -1,0 +1,68 @@
+{
+  "schema_version": "v0.6.4-discovery-gate-1",
+  "tier": "t4-mesh-recovery",
+  "llm": "grok-4.3",
+  "llm_model": "grok-4-0709",
+  "harness": "openclaw",
+  "profile": {
+    "raw": "full"
+  },
+  "outcome": "pass",
+  "evidence": {
+    "agent_called_capabilities": true,
+    "agent_received_tool_not_found": false,
+    "agent_called_include_schema": false,
+    "agent_completed_task": true,
+    "agent_called_capabilities_before_power": true,
+    "families_surfaced": [
+      "core",
+      "lifecycle",
+      "graph",
+      "governance",
+      "power",
+      "meta",
+      "archive",
+      "other"
+    ],
+    "loaded_flags": {
+      "core": true,
+      "lifecycle": true,
+      "graph": true,
+      "governance": true,
+      "power": true,
+      "meta": true,
+      "archive": true,
+      "other": true
+    },
+    "tool_calls": [
+      "memory_capabilities",
+      "memory_list",
+      "memory_recall",
+      "memory_recall",
+      "memory_recall",
+      "memory_recall",
+      "memory_recall",
+      "memory_recall",
+      "memory_recall",
+      "memory_recall",
+      "memory_recall",
+      "memory_recall",
+      "memory_recall",
+      "memory_recall",
+      "memory_recall"
+    ],
+    "error_codes": [],
+    "rounds": 8,
+    "wall_clock_ms": 190557,
+    "tokens_in": 89197,
+    "tokens_out": 2708,
+    "grok_finish_reason": "stop",
+    "final_answer_excerpt": "### Final Answer\n\n**Active Profile and Tool Count:** I am agent 'charlie' running on profile 'full' with 43 tools available. This was confirmed by calling `memory_capabilities`, which showed all 8 tool families as loaded (core, lifecycle, graph, governance, power, meta, archive, other).\n\n**Mesh-Coordination Memories Found:** I found **9** memories tagged `mesh-coordination-test` in the `discovery-gate` namespace. I discovered this by calling `memory_list` with namespace=\"discovery-gate\", which returned 17 memories total, of which 9 had the target tag in their tags field. The specific memories are:\n\n- ID: a7fae270-9c77-4563-a28a-4e7f4f3460b5, Title: Mesh test memory 1\n- ID: 9797b240-a163-47e3-86cb-1b1845928a07, Title: Mesh test memory 2\n- ID: caf64ae3-c7ee-48ea-b0fc-029132a32573, Title: Mesh test memory 3\n- ID: 2cf9419b-1721-4449-8c34-8628b20b2975, Title: Mesh test memory 4\n- ID: d8b80474-f337-407a-a511-af0f41ea3343, Title: Mesh test memory 5\n- ID: bfbbfacf-c03e-48b7-ba63-8817d7bf1e59, "
+  },
+  "timestamp_utc": "2026-05-05T02:20:16.640193Z",
+  "binary_sha256": "f5abad816bc34c11dfbadf17402ef6c6f08edecb93ae1985de7e9173415be09a",
+  "transcript_url": "runs/2026-05-05/cells/grok-4.3-openclaw-t4-mesh-recovery-charlie-full.transcript.jsonl",
+  "mcp_wire_log_sha256": "902ec2a7ede24f0d0b4ff206ec8324f95d3e259232a570e913885f3707bb3a57",
+  "verdict_reason": "mesh completed coordination across simulated peers",
+  "note": "T4 sub-cell \u2014 agent=charlie profile=full (single-process mesh simulation)"
+}

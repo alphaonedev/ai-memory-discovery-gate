@@ -27,10 +27,10 @@ This is **not** an exhaustive multi-LLM × multi-harness epic. It's a focused ga
 
 | Tier | Pass bar | Outcome |
 |---|---|:---:|
-| [T1 — Awareness](tiers/t1-awareness.md) | ≥90% | _pending real Grok run_ |
-| [T2 — Reactive recovery](tiers/t2-reactive.md) | ≥80% | _pending real Grok run_ |
-| [T3 — Proactive expansion](tiers/t3-proactive.md) | ≥50% | _pending real Grok run_ |
-| [T4 — Mesh recovery](tiers/t4-mesh.md) | ≥66% | _pending real Grok run_ |
+| [T1 — Awareness](tiers/t1-awareness.md) | >=90% | PASS (1/1) |
+| [T2 — Reactive recovery](tiers/t2-reactive.md) | >=80% | PASS (1/1) |
+| [T3 — Proactive expansion](tiers/t3-proactive.md) | >=50% | PASS (1/1) |
+| [T4 — Mesh recovery](tiers/t4-mesh.md) | >=66% | PASS (3/3) |
 
 Click any cell after the first run for the per-test transcript.
 

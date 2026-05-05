@@ -1,0 +1,45 @@
+{
+  "schema_version": "v0.6.4-discovery-gate-1",
+  "tier": "t2-reactive",
+  "llm": "grok-4.3",
+  "llm_model": "grok-4-0709",
+  "harness": "openclaw",
+  "profile": {
+    "raw": "core"
+  },
+  "outcome": "pass",
+  "evidence": {
+    "agent_called_capabilities": true,
+    "agent_received_tool_not_found": false,
+    "agent_called_include_schema": true,
+    "agent_completed_task": true,
+    "agent_called_capabilities_before_power": true,
+    "families_surfaced": [],
+    "loaded_flags": {},
+    "tool_calls": [
+      "memory_search",
+      "memory_capabilities",
+      "memory_get",
+      "memory_search",
+      "memory_search",
+      "memory_get",
+      "memory_get",
+      "memory_get",
+      "memory_get",
+      "memory_get",
+      "memory_recall"
+    ],
+    "error_codes": [],
+    "rounds": 12,
+    "wall_clock_ms": 160144,
+    "tokens_in": 94416,
+    "tokens_out": 484,
+    "grok_finish_reason": "stop",
+    "final_answer_excerpt": "Based on the knowledge graph data retrieved from the ai-memory system, there is a direct path from Project Alpha to Project Gamma via the \"derived_from\" relation.\n\nThere is also an indirect path: Project Alpha -- \"related_to\" --> Project Beta -- \"related_to\" --> Project Gamma."
+  },
+  "timestamp_utc": "2026-05-05T01:50:25.960656Z",
+  "binary_sha256": "f5abad816bc34c11dfbadf17402ef6c6f08edecb93ae1985de7e9173415be09a",
+  "transcript_url": "runs/2026-05-05/cells/grok-4.3-openclaw-t2-reactive-core.transcript.jsonl",
+  "mcp_wire_log_sha256": "41cc4cd5ea40f6636d3ad48df1b67f305ac5be464075ba9ae86cdcd94261bc94",
+  "verdict_reason": "agent pre-checked capabilities and surfaced operator action without blind call"
+}

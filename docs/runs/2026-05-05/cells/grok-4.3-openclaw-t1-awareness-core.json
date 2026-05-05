@@ -1,0 +1,54 @@
+{
+  "schema_version": "v0.6.4-discovery-gate-1",
+  "tier": "t1-awareness",
+  "llm": "grok-4.3",
+  "llm_model": "grok-4-0709",
+  "harness": "openclaw",
+  "profile": {
+    "raw": "core"
+  },
+  "outcome": "pass",
+  "evidence": {
+    "agent_called_capabilities": true,
+    "agent_received_tool_not_found": false,
+    "agent_called_include_schema": true,
+    "agent_completed_task": true,
+    "agent_called_capabilities_before_power": true,
+    "families_surfaced": [
+      "core",
+      "lifecycle",
+      "graph",
+      "governance",
+      "power",
+      "meta",
+      "archive",
+      "other"
+    ],
+    "loaded_flags": {
+      "core": true,
+      "lifecycle": false,
+      "graph": false,
+      "governance": false,
+      "power": false,
+      "meta": false,
+      "archive": false,
+      "other": false
+    },
+    "tool_calls": [
+      "memory_capabilities",
+      "memory_capabilities"
+    ],
+    "error_codes": [],
+    "rounds": 3,
+    "wall_clock_ms": 87337,
+    "tokens_in": 13110,
+    "tokens_out": 893,
+    "grok_finish_reason": "stop",
+    "final_answer_excerpt": "### What I Did\nI called the `memory_capabilities` tool twice:\n- First, with no parameters to retrieve the global capabilities document, which provided a complete list of all 8 tool families, their load status, and the tools within each (advertised even if not loaded).\n- Second, with `family=\"lifecycle\"` to confirm the enumeration for a non-loaded family, which returned its tool list and confirmed `loaded_under_active_profile=false`.\n\nThis allowed me to discover all tools without relying on prior knowledge. I discovered that only the \"core\" family is loaded under the active profile, while the other 7 families are advertised but not loaded. One tool (`memory_capabilities`) is always available as an \"always_on\" exception, even though its parent \"meta\" family is not loaded.\n\n### Discovered Tools Organized by Family\nHere is the complete list of every memory tool available in the ai-memory system, organized by family. There are 8 families in total. For each, I've noted the load status and to"
+  },
+  "timestamp_utc": "2026-05-05T01:33:20.315674Z",
+  "binary_sha256": "f5abad816bc34c11dfbadf17402ef6c6f08edecb93ae1985de7e9173415be09a",
+  "transcript_url": "runs/2026-05-05/cells/grok-4.3-openclaw-t1-awareness-core.transcript.jsonl",
+  "mcp_wire_log_sha256": "2cf7900cd295e84348c56d7a0679e6735f8a7fbb2051fd05199851f496ae558d",
+  "verdict_reason": "all 8 families surfaced; final answer named 8; loaded/unloaded distinguished"
+}
