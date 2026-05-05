@@ -107,23 +107,17 @@ enum TierArg {
     All,
 }
 
+/// v0.6.4 gate scope — Grok 4.3 only.
 #[derive(Copy, Clone, Debug, ValueEnum)]
 enum LlmArg {
-    #[value(name = "claude-opus-4.7")]
-    ClaudeOpus,
-    #[value(name = "claude-sonnet-4.6")]
-    ClaudeSonnet,
     #[value(name = "grok-4.3")]
     Grok43,
-    #[value(name = "gpt-5")]
-    Gpt5,
 }
 
+/// v0.6.4 gate scope — OpenClaw only.
 #[derive(Copy, Clone, Debug, ValueEnum)]
 enum HarnessArg {
     Openclaw,
-    Ironclaw,
-    Hermes,
 }
 
 fn main() -> Result<()> {
@@ -159,15 +153,10 @@ fn main() -> Result<()> {
 
 fn run(args: RunArgs) -> Result<()> {
     let llm = match args.llm {
-        LlmArg::ClaudeOpus => Llm::ClaudeOpus47,
-        LlmArg::ClaudeSonnet => Llm::ClaudeSonnet46,
         LlmArg::Grok43 => Llm::Grok43,
-        LlmArg::Gpt5 => Llm::Gpt5,
     };
     let harness = match args.harness {
         HarnessArg::Openclaw => Harness::Openclaw,
-        HarnessArg::Ironclaw => Harness::Ironclaw,
-        HarnessArg::Hermes => Harness::Hermes,
     };
     let profile = ProfileSelection::parse(&args.profile)?;
     let tiers = match args.tier {

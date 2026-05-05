@@ -9,19 +9,19 @@
 ## Canonical prompt
 
 ```
-{!../prompts/t2-reactive-graph.txt!}
+{!../../prompts/t2-reactive-graph.txt!}
 ```
 
 ## Pass / fail rubric
 
-| Signal | Required for pass | Source |
+| Signal | Required | Source |
 |---|---|---|
 | First ai-memory call attempted `memory_kg_query` (or `memory_get_links`) | yes | MCP wire log |
 | Server returned `-32601` `tool_not_found` | yes (test setup) | MCP wire log |
-| After error, agent called `--include-schema family=graph` OR surfaced operator action | yes | MCP wire log + LLM transcript |
+| Agent called `--include-schema family=graph` OR surfaced operator action | yes | MCP wire log + LLM transcript |
 
 ## Common failure modes
 
-- **Silent give-up** — agent reports "I cannot find a path" without naming the unloaded-family cause
-- **Fabrication** — agent invents a graph path
-- **Wrong-direction retry** — agent retries the same unloaded tool unchanged
+- **Silent give-up** — Grok reports "I cannot find a path" without naming the unloaded-family cause
+- **Fabrication** — Grok invents a graph path
+- **Wrong-direction retry** — Grok retries the same unloaded tool unchanged

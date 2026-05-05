@@ -9,22 +9,21 @@ use serde::{Deserialize, Serialize};
 use crate::tier::Tier;
 use crate::transcript::Captured;
 
+/// Single-LLM scope for v0.6.4 — xAI Grok 4.3 driving OpenClaw.
+///
+/// Multi-LLM coverage (Claude / GPT / Gemini) is explicitly out of
+/// scope for the v0.6.4 gate per product directive. Future v0.6.5+
+/// gates may extend this enum.
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum Llm {
-    ClaudeOpus47,
-    ClaudeSonnet46,
     Grok43,
-    Gpt5,
 }
 
 impl Llm {
     pub const fn slug(self) -> &'static str {
         match self {
-            Self::ClaudeOpus47 => "claude-opus-4.7",
-            Self::ClaudeSonnet46 => "claude-sonnet-4.6",
             Self::Grok43 => "grok-4.3",
-            Self::Gpt5 => "gpt-5",
         }
     }
 }
@@ -35,20 +34,21 @@ impl std::fmt::Display for Llm {
     }
 }
 
+/// Single-harness scope for v0.6.4 — OpenClaw only.
+///
+/// IronClaw + Hermes are out of scope; substrate cert in the
+/// v0.6.3.1 A2A campaign already proved them, and the discovery
+/// dance is harness-agnostic at the protocol layer.
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum Harness {
     Openclaw,
-    Ironclaw,
-    Hermes,
 }
 
 impl Harness {
     pub const fn slug(self) -> &'static str {
         match self {
             Self::Openclaw => "openclaw",
-            Self::Ironclaw => "ironclaw",
-            Self::Hermes => "hermes",
         }
     }
 }

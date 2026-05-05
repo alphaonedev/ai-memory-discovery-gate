@@ -1,10 +1,11 @@
 # ai-memory-discovery-gate
 
-[![Gate](https://img.shields.io/badge/v0.6.4_gate-harness--pipeline_green-brightgreen)]()
+[![Gate](https://img.shields.io/badge/v0.6.4_gate-pending_real_run-yellow)]()
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![DB](https://img.shields.io/badge/DB_baseline-v0.6.3.1_(schema_v19)-6ee7ff)]()
+[![Scope](https://img.shields.io/badge/scope-OpenClaw_×_xAI_Grok_4.3-deep--purple)]()
 
-**Empirical ship-gate that proves AI NHI agents can discover and use ai-memory tools outside the 5-tool default surface when they need them.**
+**Empirical ship-gate that proves AI NHI agents (xAI Grok 4.3 driven through OpenClaw) can discover and use ai-memory tools outside the v0.6.4 5-tool default surface when they need them.**
 
 ## Why this gate exists
 
@@ -12,49 +13,59 @@ ai-memory v0.6.4 (`quiet-tools`) collapses the default tool surface from 43 to 5
 
 1. **Always-on `memory_capabilities`** — every profile loads it; agent calls it to discover the 8 families
 2. **`tool_not_found` error hint** — calling an unloaded tool returns `-32601` with an actionable suggestion
-3. **`--include-schema family=<f>` runtime expansion** — agent or host registers the missing schemas without a server restart
+3. **`memory_capabilities --include-schema family=<f>` runtime expansion** — agent or host registers the missing schemas without a server restart
 
-These mechanisms are correctly *implemented* in v0.6.4. **Whether real LLMs (Claude / GPT / Grok / Gemini) actually NOTICE them and use them is empirical, not architectural.** This repo is the empirical test.
+These mechanisms are correctly *implemented* in v0.6.4. **Whether xAI Grok 4.3 actually NOTICES them and uses them is empirical, not architectural.** This repo is the empirical test.
+
+## Scope (intentionally tight)
+
+| Dimension | In scope | Out of scope |
+|---|---|---|
+| **Harness** | OpenClaw only | IronClaw, Hermes |
+| **LLM** | xAI Grok 4.3 only | Claude Opus / Sonnet, OpenAI GPT-5, Gemini |
+| **DB baseline** | v0.6.3.1 (schema v19) | other versions |
+| **Tiers** | T1 awareness, T2 reactive, T3 proactive, T4 mesh | none |
+| **Profiles** | core (default), graph, full, custom | admin, power (covered transitively) |
+
+This is **not** a "massive epic of testing" — it's a focused gate that answers one question: *can a Grok-driven OpenClaw agent use the v0.6.4 discovery dance?* If yes, the v0.6.4 ship is empirically validated for the most common eager-loading harness combination. If no, v0.6.4 needs sharper system-prompt education before public announcement.
 
 ## Verdict (latest run)
 
-| | OpenClaw | IronClaw | Hermes |
-|---|---|---|---|
-| Claude Opus 4.7 | _pending_ | _pending_ | _pending_ |
-| Claude Sonnet 4.6 | _pending_ | _pending_ | _pending_ |
-| xAI Grok 4.3 | _pending_ | _pending_ | _pending_ |
-| OpenAI GPT-5 | _pending_ | _pending_ | _pending_ |
-
-Click any cell for the per-test transcript. Aggregate verdict at [`docs/runs/<latest>/verdict.md`](docs/runs/).
-
-## Tier matrix
-
-| Tier | Question | Pass bar |
+| Tier | Pass bar | Outcome |
 |---|---|---|
-| **T1 — Awareness** | Does the agent know unloaded tools exist? | ≥90% call `memory_capabilities`, surface ≥6 of 8 families |
-| **T2 — Reactive recovery** | Does the agent recover from `tool_not_found`? | ≥80% follow the error hint to `--include-schema` |
-| **T3 — Proactive expansion** | Does the agent reach for `--include-schema` before failing? | ≥50% call `memory_capabilities` first |
-| **T4 — Mesh recovery** | Can a 3-agent mesh route around misconfigured peers? | ≥66% complete the coordination task |
+| T1 — Awareness | ≥90% calls succeed | _pending_ |
+| T2 — Reactive recovery | ≥80% recover | _pending_ |
+| T3 — Proactive expansion | ≥50% pre-check | _pending_ |
+| T4 — Mesh recovery | ≥66% mesh complete | _pending_ |
 
-A run is **GATE GREEN** when all four pass bars are met. A failing T1 means v0.6.4 is a regression in agent capability awareness regardless of the token-cost win.
+A run is **GATE GREEN** when all four pass bars are met. Click any cell after the first run for the per-test transcript.
 
 ## DB baseline
 
-Every test starts from a **v0.6.3.1 DB** (schema v18 or v19) with a deterministic seed corpus, then opens it with the v0.6.4 binary. This exercises the v19 → v20 migration path AND the discovery mechanisms in a single run, so a green gate also implies:
+Every test starts from a **v0.6.3.1 DB** (schema v19) restored from a deterministic seed corpus (17 memories spanning Project Alpha/Beta/Gamma + Aurora consolidation candidates + 9 mesh-coordination memories; 3 graph links). The v0.6.4 binary opens it on first start, runs the v19 → v20 migration, and proceeds with the discovery test.
 
-- v0.6.3.1 → v0.6.4 schema migration is non-destructive on real-shaped data
-- `audit_log` (schema v20) is created idempotently on the migrated DB
-- All v0.6.3.1 corpus rows remain queryable post-migration
+So a green gate also implies:
 
-Fixtures: `fixtures/corpus/v0.6.3.1-baseline.db.gz` (compressed; restored to a tempfile per test).
+- v0.6.3.1 → v0.6.4 schema migration is non-destructive
+- `audit_log` (v20) created idempotently on the migrated DB
+- All v0.6.3.1 corpus rows queryable post-migration
 
-## How to run locally
+Fixture: `fixtures/corpus/v0.6.3.1-baseline.db.gz` (7,601 bytes).
+
+## How to run
+
+The runner is Docker-based (per user directive — reuses the OpenClaw harness from `alphaonedev/ai-memory-a2a-v0.6.3.1` that delivered 9/9 substrate streaks).
 
 ```bash
-git clone https://github.com/alphaonedev/ai-memory-discovery-gate
-cd ai-memory-discovery-gate
-cargo build --release
-./target/release/discovery-gate run \
+# 1. Build the OpenClaw image with v0.6.4 binary baked in
+docker buildx build -f docker/Dockerfile.base -t ai-memory-base:v0.6.4 .
+docker buildx build -f docker/Dockerfile.openclaw -t openclaw-discovery:v0.6.4 docker/
+
+# 2. Drop your xAI API key into .env
+echo "XAI_API_KEY=xai-..." > .env
+
+# 3. Run the gate
+./runner/target/release/discovery-gate run \
   --binary ../ai-memory-mcp/target/release/ai-memory \
   --tier all \
   --llm grok-4.3 \
@@ -62,12 +73,12 @@ cargo build --release
   --output docs/runs/$(date +%Y-%m-%d)
 ```
 
-Each test:
-1. Restores `fixtures/corpus/v0.6.3.1-baseline.db.gz` to a tempfile
-2. Spawns the v0.6.4 binary at the requested profile
-3. Drives the named LLM through the named harness with the canonical prompt for the tier
-4. Captures full LLM transcript + MCP wire log + final verdict
-5. Writes per-cell markdown to `docs/runs/<date>/cells/`
+Or for the no-LLM-credentials harness-pipeline smoke test:
+
+```bash
+DISCOVERY_GATE_BINARY=../ai-memory-mcp/target/release/ai-memory \
+    bash scripts/smoke-t1-local.sh
+```
 
 ## Repo layout
 
@@ -75,40 +86,34 @@ Each test:
 ai-memory-discovery-gate/
 ├── README.md                        # this file
 ├── LICENSE                          # Apache-2.0
-├── prompts/                         # canonical prompts per tier (immutable)
-│   ├── t1-awareness.txt
-│   ├── t2-reactive-graph.txt
-│   ├── t3-proactive-power.txt
-│   └── t4-mesh-coordination.txt
-├── runner/                          # Rust crate; runs one (tier, llm, harness) cell
-│   ├── Cargo.toml
-│   └── src/
-│       ├── main.rs
-│       ├── tier.rs                  # Tier enum + pass criteria
-│       ├── verdict.rs               # JSON schema + aggregation
-│       ├── transcript.rs            # MCP wire log + LLM transcript capture
-│       └── corpus.rs                # restore v0.6.3.1 fixture per test
+├── prompts/                         # 4 canonical immutable tier prompts
+├── runner/                          # Rust crate; orchestrates Docker mesh
 ├── fixtures/
-│   ├── corpus/                      # v0.6.3.1 seed DBs (schema v18/v19)
-│   └── allowlists/                  # config.toml allowlist fixtures for T4
-├── docker/                          # mesh compose files; reuse v0.6.3.1 A2A work
-│   ├── docker-compose.openclaw.yml
-│   ├── docker-compose.ironclaw.yml
-│   └── docker-compose.hermes.yml
+│   ├── corpus/                      # v0.6.3.1 seed DBs
+│   └── allowlists/                  # config.toml allowlist fixtures (T4)
+├── docker/                          # OpenClaw mesh (imported from
+│   │                                # ai-memory-a2a-v0.6.3.1)
+│   ├── Dockerfile.base
+│   ├── Dockerfile.openclaw
+│   ├── docker-compose.openclaw.yml  # 4-node mesh, bridge 10.88.1.0/24
+│   ├── entrypoint.sh
+│   ├── drive_agent.sh               # xAI Grok 4.3 driver
+│   ├── gen-tls.sh
+│   ├── healthcheck.sh
+│   └── run-testbook.sh
 ├── docs/                            # GitHub Pages source
-│   ├── index.md                     # landing — verdict matrix
-│   ├── tiers/                       # one page per tier
-│   ├── methodology.md               # how the gate works + pass-criteria rationale
-│   └── runs/                        # date-stamped per-campaign verdicts + transcripts
-└── .github/workflows/
-    ├── pages.yml                    # publish docs/ on push to main
-    └── nightly-gate.yml             # weekly regression vs latest LLMs
+├── scripts/
+│   └── smoke-t1-local.sh            # no-LLM smoke test (no Docker, no key)
+└── .github/workflows/pages.yml      # Pages publish on push to main
 ```
 
 ## Companion to v0.6.4
 
-This gate ships in the v0.6.4 release window. Verdict from the first campaign blocks the v0.6.4 tag if any tier falls below its pass bar. v0.6.4-018 in `alphaonedev/ai-memory-mcp` tracks the gating dependency.
+- Ships in the v0.6.4 release window
+- Verdict from the first **real LLM-driven** campaign blocks the v0.6.4 public-channel announcement if any tier falls below pass bar
+- The harness-pipeline smoke run already validates the non-LLM portion of the pipeline (DB restore + v19→v20 migration + MCP stdio + capabilities parsing + verdict scoring)
+- Tracked in [`alphaonedev/ai-memory-mcp` issue #539](https://github.com/alphaonedev/ai-memory-mcp/issues/539)
 
 ## License
 
-Apache-2.0 — same as ai-memory-mcp. The seed corpus and prompt files are intentionally license-permissive so anyone can fork the gate, re-run against their own LLM/harness combinations, and contribute results back.
+Apache-2.0 — same as ai-memory-mcp.

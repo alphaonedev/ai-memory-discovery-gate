@@ -1,6 +1,6 @@
 # T4 — Mesh recovery
 
-> "Can a 3-agent mesh route around misconfigured peers?"
+> "Can a 3-OpenClaw mesh route around misconfigured peers?"
 
 ## Pass bar
 
@@ -14,10 +14,12 @@
 | bob | graph | 5 + 8 + capabilities (14 visible) |
 | charlie | full | 43 |
 
+All three are **OpenClaw containers** driven by **xAI Grok 4.3** — the v0.6.4 gate's only LLM/harness combination.
+
 ## Canonical prompt
 
 ```
-{!../prompts/t4-mesh-coordination.txt!}
+{!../../prompts/t4-mesh-coordination.txt!}
 ```
 
 ## Pass / fail rubric

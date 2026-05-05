@@ -6,7 +6,8 @@ Per-campaign verdict pages land here. First baseline run will appear under `<YYY
 
 | Date | Verdict | Notes |
 |---|---|---|
-| [2026-05-04](2026-05-04/verdict.md) | ✅ HARNESS-PIPELINE GREEN | First baseline run. Validates fixture restore + v19→v20 migration + MCP stdio + capabilities parsing + verdict scoring. LLM cells pending API credentials. |
+| [2026-05-05](2026-05-05/verdict.md) | ✅ HARNESS-PIPELINE GREEN | Scope narrowed to **OpenClaw × xAI Grok 4.3** per v0.6.4 product directive. Pipeline confirmed end-to-end. Real LLM cell pending xAI API key. |
+| [2026-05-04](2026-05-04/verdict.md) | ✅ HARNESS-PIPELINE GREEN | First baseline (broader scope before narrowing). Validates fixture restore + v19→v20 migration + MCP stdio + capabilities parsing. |
 
 ## Per-cell evidence
 
